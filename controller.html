@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+
+<html>
+
+   <head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+   <button id ="leftButton" style="height:100px;width:170px; float: left;
+         -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">Left</button>
+         <button id = "rightButton" style="height:100px;width:170px; float: right;
+         -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">Right</button>
+         <button onclick="jump()" style="height:100px;width:375px
+         ">Jump</button>
+        
+
+	
+      <script type="text/javascript">
+         var ws = new WebSocket("ws://192.168.1.126:3000");
+         document.getElementById("rightButton").addEventListener('touchstart', function(event) {
+             right();
+         });
+
+         document.getElementById("rightButton").addEventListener('touchend', function(event) {
+             rightUp();
+         });
+
+         document.getElementById("leftButton").addEventListener('touchstart', function(event) {
+             left();
+         });
+
+         document.getElementById("leftButton").addEventListener('touchend', function(event) {
+             leftUp();
+         });
+
+         function WebSocketTest()
+         {
+            if ("WebSocket" in window)
+            {
+               alert("WebSocket is supported by your Browser!");
+               
+               // Let us open a web socket
+              
+				
+               ws.onopen = function()
+               {
+                  // Web Socket is connected, send data using send()
+
+               };
+				
+               ws.onmessage = function (evt) 
+               { 
+                  var received_msg = evt.data;
+                  //alert("Message is received...");
+                  //alert(received_msg);
+               };
+				
+               ws.onclose = function()
+               { 
+                  // websocket is closed.
+                  alert("Connection is closed..."); 
+               };
+					
+               window.onbeforeunload = function(event) {
+                  socket.close();
+               };
+            }
+            
+            else
+            {
+               // The browser doesn't support WebSocket
+               alert("WebSocket NOT supported by your Browser!");
+            }
+         }
+
+         function jump() {
+            ws.send(JSON.stringify({type: "jump"}));
+         }
+
+         function left() {
+            ws.send(JSON.stringify({type: "left"}));
+         }
+
+         function right() {
+            ws.send(JSON.stringify({type: "right"}));
+         }
+
+         function leftUp() {
+            ws.send(JSON.stringify({type: "leftUp"}));
+         }
+
+         function rightUp() {
+            ws.send(JSON.stringify({type: "rightUp"}));
+         }
+
+      </script>
+		
+   </head>
+   <body>
+   
+     
+         <!--<a href="javascript:WebSocketTest()">Init Websocket</a>-->
+      
+
+      
+   </body>
+</html>
