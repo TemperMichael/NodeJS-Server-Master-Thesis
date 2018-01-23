@@ -74,7 +74,15 @@ wsServer.on("connection", socket => {
         if(client.readyState !== ws.OPEN){
           return;
         }
-          client.send(JSON.stringify({type: "jump", jump: "true"}));
+          client.send(JSON.stringify({type: "jump", jump: "true", time: message.time, playerID: message.playerID}));
+      });
+      break;
+      case "dash":
+      wsServer.clients.forEach(client => {
+        if(client.readyState !== ws.OPEN){
+          return;
+        }
+          client.send(JSON.stringify({type: "dash", dash: "true", time: message.time, playerID: message.playerID}));
       });
       break;
        case "left":
@@ -82,7 +90,7 @@ wsServer.on("connection", socket => {
         if(client.readyState !== ws.OPEN){
           return;
         }
-          client.send(JSON.stringify({type: "left", moveLeft: "true"}));
+          client.send(JSON.stringify({type: "left", moveLeft: "true", time: message.time, playerID: message.playerID}));
       });
       break;
        case "right":
@@ -90,7 +98,7 @@ wsServer.on("connection", socket => {
         if(client.readyState !== ws.OPEN){
           return;
         }
-          client.send(JSON.stringify({type: "right", moveRight: "true"}));
+          client.send(JSON.stringify({type: "right", moveRight: "true", time: message.time, playerID: message.playerID}));
       });
       break;
        case "leftUp":
@@ -98,7 +106,7 @@ wsServer.on("connection", socket => {
         if(client.readyState !== ws.OPEN){
           return;
         }
-          client.send(JSON.stringify({type: "left", moveLeft: "false"}));
+          client.send(JSON.stringify({type: "left", moveLeft: "false", time: message.time, playerID: message.playerID}));
       });
       break;
 
@@ -107,7 +115,7 @@ wsServer.on("connection", socket => {
         if(client.readyState !== ws.OPEN){
           return;
         }
-          client.send(JSON.stringify({type: "right", moveRight: "false"}));
+          client.send(JSON.stringify({type: "right", moveRight: "false", time: message.time, playerID: message.playerID}));
       });
       break;
       default:
@@ -126,8 +134,20 @@ function bin2string(array){
   return result;
 }
 
+
+
 server.listen(port, () => {
-  console.log("Server is running on port 3000...");
+    require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+        console.log('Server is running on http://%s:%s', add, port);
+        var fs = require('fs');
+        fs.writeFile("/Users/Temper/Desktop/FHHagenbergIM/Masterarbeit Projekte/NodeJS-Server-Master-Thesis/ServerIP.txt", add + ":" + port, function(err) {
+        if(err) {
+           return console.log(err);
+        }
+
+        console.log("The file was saved!");
+        }); 
+    })
 });
 
 

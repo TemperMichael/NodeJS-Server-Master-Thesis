@@ -1,21 +1,37 @@
 <!DOCTYPE HTML>
 
 <html>
+  
 
-   <head>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <head>
+  <meta name="viewport" content="fullscreen, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-   <button id ="leftButton" style="height:100px;width:170px; float: left;
-         -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">Left</button>
-         <button id = "rightButton" style="height:100px;width:170px; float: right;
-         -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">Right</button>
-         <button onclick="jump()" style="height:100px;width:375px
-         ">Jump</button>
-        
 
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="manifest" href="manifest.json">
+
+  <img src="./cloud1.png" style="left: -30px">
+  <img src="./cloud2.png" style="width:80px;top: 230px; left: 250px">
+  <img src="./cloud1.png" style="width:180px;top: 230px; right: -30px">
+  <img src="./cloud3.png" style="width:120px;top: 40px; left: 350px">
+  <img src="./cloud3.png" style="width:180px;top:290px; left: -30px">
+  <button id ="leftButton">Left</button>
+  <button id = "rightButton">Right</button>
+  <button id ="jumpButton">Jump</button>
+  <button id = "dashButton">Dash</button>
+
+  <h1>Please rotate device to landscape!</h1>
 	
       <script type="text/javascript">
-         var ws = new WebSocket("ws://192.168.1.126:3000");
+
+
+         if(!getCookie("playerID")) {
+            setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+         }
+
+         var ws = new WebSocket("ws://10.59.0.74:3000");
+
+
          document.getElementById("rightButton").addEventListener('touchstart', function(event) {
              right();
          });
@@ -30,6 +46,14 @@
 
          document.getElementById("leftButton").addEventListener('touchend', function(event) {
              leftUp();
+         });
+
+          document.getElementById("jumpButton").addEventListener('touchstart', function(event) {
+             jump();
+         });
+
+         document.getElementById("dashButton").addEventListener('touchstart', function(event) {
+             dash();
          });
 
          function WebSocketTest()
@@ -73,30 +97,60 @@
          }
 
          function jump() {
-            ws.send(JSON.stringify({type: "jump"}));
+            ws.send(JSON.stringify({type: "jump", time: Date.now(), playerID: ""+getCookie("playerID")}));
+         }
+
+         function dash() {
+            ws.send(JSON.stringify({type: "dash", time: Date.now(), playerID: ""+getCookie("playerID")}));
          }
 
          function left() {
-            ws.send(JSON.stringify({type: "left"}));
+            ws.send(JSON.stringify({type: "left", time: new Date().getTime(), playerID: ""+ getCookie("playerID")}));
          }
 
          function right() {
-            ws.send(JSON.stringify({type: "right"}));
+            ws.send(JSON.stringify({type: "right", time: new Date().getTime(), playerID: ""+ getCookie("playerID")}));
          }
 
          function leftUp() {
-            ws.send(JSON.stringify({type: "leftUp"}));
+            ws.send(JSON.stringify({type: "leftUp", time: new Date().getTime(), playerID: ""+ getCookie("playerID")}));
          }
 
          function rightUp() {
-            ws.send(JSON.stringify({type: "rightUp"}));
+            ws.send(JSON.stringify({type: "rightUp", time: new Date().getTime(), playerID: ""+ getCookie("playerID")}));
+         }
+
+         function setCookie(name,value,days) {
+          var expires = "";
+          if (days) {
+             var date = new Date();
+             date.setTime(date.getTime() + (days*24*60*60*1000));
+             expires = "; expires=" + date.toUTCString();
+          }
+          document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+         }
+
+         function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+               var c = ca[i];
+               while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+               }
+            return null;
+         }
+
+         function eraseCookie(name) {   
+          document.cookie = name+'=; Max-Age=-99999999;';  
          }
 
       </script>
+
 		
    </head>
    <body>
-   
+   <body id="container" bgcolor="#BAC9FF">
      
          <!--<a href="javascript:WebSocketTest()">Init Websocket</a>-->
       
