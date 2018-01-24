@@ -4,23 +4,23 @@
   
 
   <head>
-  <meta name="viewport" content="fullscreen, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="manifest" href="manifest.json">
-
   <img src="./cloud1.png" style="left: -30px">
   <img src="./cloud2.png" style="width:80px;top: 230px; left: 250px">
-  <img src="./cloud1.png" style="width:180px;top: 230px; right: -30px">
-  <img src="./cloud3.png" style="width:120px;top: 40px; left: 350px">
-  <img src="./cloud3.png" style="width:180px;top:290px; left: -30px">
-  <button id ="leftButton">Left</button>
+  <img src="./cloud1.png" style="width:180px;top: 230px; right: 0px">
+  <img src="./cloud3.png" style="width:120px;top: 20px; left: 350px">
+  <img src="./cloud3.png" style="width:180px;top:250px; left: -30px">
+
+  <h1>Please rotate your device 90&#176 to the left or right!</h1>
+
+    <button id ="leftButton">Left</button>
   <button id = "rightButton">Right</button>
   <button id ="jumpButton">Jump</button>
   <button id = "dashButton">Dash</button>
-
-  <h1>Please rotate device to landscape!</h1>
 	
       <script type="text/javascript">
 
@@ -28,32 +28,53 @@
          if(!getCookie("playerID")) {
             setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
          }
+        document.addEventListener('touchmove', function (event) {
+          event.preventDefault();
+         }, false);
 
          var ws = new WebSocket("ws://10.59.0.74:3000");
 
 
+        //prevent pinch to zoom on ios
+        
+         document.addEventListener('touchmove', function (event) {
+          if (event.scale !== 1) { event.preventDefault(); }
+         }, false);
+
+         var lastTouchEnd = 0;
+         document.addEventListener('touchend', function (event) {
+           preventDoubleTapZoom(event);
+         }, false);
+         
+
          document.getElementById("rightButton").addEventListener('touchstart', function(event) {
              right();
+             preventDoubleTapZoom(event)
          });
 
          document.getElementById("rightButton").addEventListener('touchend', function(event) {
              rightUp();
+             preventDoubleTapZoom(event)
          });
 
          document.getElementById("leftButton").addEventListener('touchstart', function(event) {
              left();
+             preventDoubleTapZoom(event)
          });
 
          document.getElementById("leftButton").addEventListener('touchend', function(event) {
              leftUp();
+             preventDoubleTapZoom(event)
          });
 
           document.getElementById("jumpButton").addEventListener('touchstart', function(event) {
              jump();
+             preventDoubleTapZoom(event)
          });
 
          document.getElementById("dashButton").addEventListener('touchstart', function(event) {
              dash();
+             preventDoubleTapZoom(event)
          });
 
          function WebSocketTest()
@@ -120,6 +141,16 @@
             ws.send(JSON.stringify({type: "rightUp", time: new Date().getTime(), playerID: ""+ getCookie("playerID")}));
          }
 
+         function preventDoubleTapZoom(event) {
+          
+          var now = (new Date()).getTime();
+          if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+          }
+          lastTouchEnd = now;
+          
+         }
+
          function setCookie(name,value,days) {
           var expires = "";
           if (days) {
@@ -150,7 +181,7 @@
 		
    </head>
    <body>
-   <body id="container" bgcolor="#BAC9FF">
+   <body id="container" scroll="no" bgcolor="#BAC9FF">
      
          <!--<a href="javascript:WebSocketTest()">Init Websocket</a>-->
       

@@ -2,34 +2,57 @@
 img{
 	position: absolute;
 	opacity: 0.5;
+	display: inline-block;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select:none;
+	user-select:none;
+	-o-user-select:none;
+	outline: none;
 }
+
+
 
 button{
 	position: relative;
-	margin-top: 120px;
-	-webkit-tap-highlight-color: transparent;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
+    -webkit-tap-highlight-color: transparent;
 	color: white;
 	font-size: 25px;
 	font-weight: bold;
 	text-align: center;
 	background: transparent url("./snow.png") center no-repeat;
 	background-size: 100%;
+	background-position: center;
 	border: none;
-	height:130px;
-	width:130px;
+	height:400px;
+	width:20%;
 	display: inline-block;
+	-webkit-touch-callout: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	-khtml-user-select: none;
 	-ms-user-select:none;
 	user-select:none;
 	-o-user-select:none;
+	outline: none;
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
 
+html, body {
+	overflow: auto;
+	margin: 0;
+	padding: 0;
 }
 
 
 #leftButton {
 	float: left;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 
 #rightButton {
@@ -39,7 +62,7 @@ button{
 
 #jumpButton {
 	float: right;
-	margin-right: 10px;
+	margin-right: 0px;
 }
 
 #dashButton {
@@ -48,17 +71,32 @@ button{
 }
 
 
+
+
 button:active {
-  -webkit-tap-highlight-color: transparent;
   color: white;
   opacity: 0.6;
 }
 
+
+
+
 @media only screen and (orientation:portrait){
 	h1{
+		position: relative;
 		padding-top: 50%;
 		vertical-align: center;
 		text-align: center;
+		font-family: "Arial";
+		float: left;
+		-webkit-touch-callout: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select:none;
+	user-select:none;
+	-o-user-select:none;
+	outline: none;
 	}
 
   button, img {
