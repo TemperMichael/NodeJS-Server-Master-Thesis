@@ -7,13 +7,6 @@ var http = require("http"),
   port = 3000;
 
 const ws = require("ws");
-const express = require("express");
-
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("Hallo");
-});
 
 const server = http.createServer(function (request, response) {
 
@@ -21,9 +14,18 @@ const server = http.createServer(function (request, response) {
     filename = path.join(process.cwd(), uri);
 
   var contentTypesByExtension = {
-    '.html': "text/html",
-    '.css': "text/css",
-    '.js': "text/javascript"
+    '.ico': 'image/x-icon',
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.json': 'application/json',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.wav': 'audio/wav',
+    '.mp3': 'audio/mpeg',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword'
   };
 
   fs.exists(filename, function (exists) {
@@ -31,7 +33,7 @@ const server = http.createServer(function (request, response) {
       response.writeHead(404, {
         "Content-Type": "text/plain"
       });
-      response.write("404 Not Found\n");
+      response.write("Error 404 - File "+ uri + " Not Found\n");
       response.end();
       return;
     }
@@ -43,7 +45,7 @@ const server = http.createServer(function (request, response) {
         response.writeHead(500, {
           "Content-Type": "text/plain"
         });
-        response.write(err + "\n");
+        response.write("SERVER ERROR:" +err + "\n");
         response.end();
         return;
       }
@@ -180,6 +182,8 @@ wsServer.on("connection", socket => {
   });
 });
 
+wsServer.on('error', () => console.log('errored'));
+
 
 function bin2string(array) {
   var result = "";
@@ -192,7 +196,5 @@ function bin2string(array) {
 
 
 server.listen(port, () => {
-  require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('Server is running on http://%s:%s', add, port);
-  })
+    console.log('Server is running on port: %s', port);
 });
