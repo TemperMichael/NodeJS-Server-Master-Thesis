@@ -185,7 +185,7 @@ wsServer.on("connection", socket => {
     }
 
     socket.on('error', function (exc) {
-    sys.log("Socket Server Error: " + exc);
+    console.log("Socket Server Error: " + exc);
     });
 
   });
