@@ -1,5 +1,5 @@
 
-img{
+.buttonimg{
 	position: absolute;
 	opacity: 0.5;
 	display: inline-block;
@@ -82,9 +82,10 @@ button:active {
 
 
 @media only screen and (orientation:portrait){
-	h1{
+	p{
 		position: relative;
-		padding-top: 50%;
+		padding-top: 0%;
+		color: white;
 		vertical-align: center;
 		text-align: center;
 		font-family: "Arial";
@@ -99,7 +100,57 @@ button:active {
 	outline: none;
 	}
 
-  button, img {
+
+
+	.inputContainer{
+		position: relative;
+		width: 100%;
+		padding-top: 40%;
+		vertical-align: center;
+		text-align: center;
+		font-family: "Arial";
+		float: left;
+		-webkit-touch-callout: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-ms-user-select:none;
+	user-select:none;
+	-o-user-select:none;
+	outline: none;
+	}
+
+	#inputText {
+		font-size: 14px;
+		text-align: center;
+		height: 20px;
+		width: 140px;
+		margin-bottom: 10px;
+	}
+
+	#submitButton{
+
+		display: initial;
+		font-size: 12px;
+		height: 80px;
+	}
+
+	.rotateimg {
+		position: relative;
+		align-self: center;
+		width: 50%;
+		vertical-align: center;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select:none;
+	user-select:none;
+	-o-user-select:none;
+	outline: none;
+	}
+
+  button, .buttonimg {
   	display: none;
   }
 
@@ -107,7 +158,7 @@ button:active {
 }
 
 @media only screen and (orientation:landscape){
-	h1{
+	p, .inputContainer, .rotateimg {
 		display: none;
 	}
 

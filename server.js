@@ -59,7 +59,7 @@ const server = http.createServer(function (request, response) {
     });
   });
 
-});
+}).setTimeout(0);
 
 const wsServer = new ws.Server({
   server
@@ -91,7 +91,6 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "jump",
             jump: "true",
-            time: message.time,
             playerID: message.playerID
           }));
         });
@@ -104,7 +103,6 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "dash",
             dash: "true",
-            time: message.time,
             playerID: message.playerID
           }));
         });
@@ -117,7 +115,6 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "left",
             moveLeft: "true",
-            time: message.time,
             playerID: message.playerID
           }));
         });
@@ -130,7 +127,6 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "right",
             moveRight: "true",
-            time: message.time,
             playerID: message.playerID
           }));
         });
@@ -143,7 +139,6 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "left",
             moveLeft: "false",
-            time: message.time,
             playerID: message.playerID
           }));
         });
@@ -157,11 +152,21 @@ wsServer.on("connection", socket => {
           client.send(JSON.stringify({
             type: "right",
             moveRight: "false",
-            time: message.time,
             playerID: message.playerID
           }));
         });
         break;
+      case "username":
+       wsServer.clients.forEach(client => {
+         if (client.readyState !== ws.OPEN) {
+           return;
+         }
+         client.send(JSON.stringify({
+           playerID: message.playerID,
+           username: message.username
+         }));
+       });
+       break;
 
       case "reset":
         wsServer.clients.forEach(client => {
@@ -169,7 +174,7 @@ wsServer.on("connection", socket => {
             return;
           }
           client.send(JSON.stringify({
-            reset: "true"
+            reset: message.reset
           }));
         });
         break;
@@ -179,10 +184,21 @@ wsServer.on("connection", socket => {
         }));
     }
 
+    socket.on('error', function (exc) {
+    sys.log("Socket Server Error: " + exc);
+    });
+
   });
 });
 
-wsServer.on('error', () => console.log('errored'));
+server.on('error', function (exc) {
+    sys.log("Server Error: " + exc);
+});
+
+wsServer.on('error', function (exc) {
+    sys.log("WS Server Error: " + exc);
+});
+
 
 
 function bin2string(array) {
