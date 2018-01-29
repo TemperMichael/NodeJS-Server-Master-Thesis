@@ -81,7 +81,7 @@ button:active {
 
 
 
-@media only screen and (orientation:portrait){
+@media screen and (max-aspect-ratio: 13/9) {
 	p{
 		position: relative;
 		padding-top: 0%;
@@ -157,7 +157,7 @@ button:active {
 
 }
 
-@media only screen and (orientation:landscape){
+@media screen and (min-aspect-ratio: 13/9) {
 	p, .inputContainer, .rotateimg {
 		display: none;
 	}
