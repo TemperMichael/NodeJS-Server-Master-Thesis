@@ -126,6 +126,7 @@ button:active {
 		height: 20px;
 		width: 140px;
 		margin-bottom: 10px;
+		outline: none;
 	}
 
 	#submitButton{

@@ -15,7 +15,7 @@
   <img class="buttonimg" src="./cloud3.png" style="width:120px;top: 20px; left: 350px">
   <img class="buttonimg" src="./cloud3.png" style="width:180px;top:250px; left: -30px">
   <div class="inputContainer"> 
-  <input id="inputText" type="text" maxlength="10" placeholder="Choose your name ..." name="lname"><br>
+  <input id="inputText" oninput="resetInputColor()" type="text" maxlength="10" placeholder="Choose your name ..." name="lname"><br>
   <button id="submitButton">Submit</button>
   </div>
   <p>
@@ -58,7 +58,8 @@
          });
 
          document.getElementById("submitButton").addEventListener('touchstart', function(e){
-          console.log("TEST");
+          document.getElementById("inputText").style.backgroundColor = "green";
+          document.getElementById("inputText").style.color = "white";
           ws.send(JSON.stringify({type: "username", playerID: ""+getCookie("playerID"), username: document.getElementById("inputText").value }));
          });
         
@@ -126,6 +127,11 @@
                // The browser doesn't support WebSocket
                alert("WebSocket NOT supported by your Browser!");
             }
+         }
+
+         function resetInputColor(){
+          document.getElementById("inputText").style.backgroundColor = "white";
+          document.getElementById("inputText").style.color = "black";
          }
 
          function jump() {
