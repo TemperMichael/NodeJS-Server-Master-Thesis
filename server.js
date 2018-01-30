@@ -33,7 +33,7 @@ const server = http.createServer(function (request, response) {
       response.writeHead(404, {
         "Content-Type": "text/plain"
       });
-      response.write("Error 404 - File "+ uri + " Not Found\n");
+      response.write("Error 404 - File " + uri + " Not Found\n");
       response.end();
       return;
     }
@@ -45,7 +45,7 @@ const server = http.createServer(function (request, response) {
         response.writeHead(500, {
           "Content-Type": "text/plain"
         });
-        response.write("SERVER ERROR:" +err + "\n");
+        response.write("SERVER ERROR:" + err + "\n");
         response.end();
         return;
       }
@@ -61,145 +61,85 @@ const server = http.createServer(function (request, response) {
 
 }).setTimeout(0);
 
+server.listen(port, () => {
+  console.log('Server is running on port: %s', port);
+});
+
+server.on('error', function (exc) {
+  sys.log("Server Error: " + exc);
+});
+
 const wsServer = new ws.Server({
   server
 });
+
 wsServer.on("connection", socket => {
   socket.on("message", data => {
     const message = JSON.parse(data);
+    console.log("----------------\nFrom Client:");
     console.log(message);
     switch (message.type) {
-
-
-      case "ping":
-        socket.send(JSON.stringify({
-          type: "ping",
-          reply: "pong"
-        }));
-        break;
-      case "request":
-        socket.send(JSON.stringify({
-          type: "request",
-          reply: "response"
-        }));
-        break;
       case "jump":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "jump",
-            jump: "true",
-            playerID: message.playerID
-          }));
-        });
+        message.jump = "true";
         break;
       case "dash":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "dash",
-            dash: "true",
-            playerID: message.playerID
-          }));
-        });
+        message.dash = "true";
         break;
       case "left":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "left",
-            moveLeft: "true",
-            playerID: message.playerID
-          }));
-        });
+        message.moveLeft = "true";
         break;
       case "right":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "right",
-            moveRight: "true",
-            playerID: message.playerID
-          }));
-        });
+        message.moveRight = "true";
         break;
       case "leftUp":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "left",
-            moveLeft: "false",
-            playerID: message.playerID
-          }));
-        });
+        message.moveLeft = "false";
         break;
-
       case "rightUp":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            type: "right",
-            moveRight: "false",
-            playerID: message.playerID
-          }));
-        });
+        message.moveRight = "false";
         break;
       case "username":
-       wsServer.clients.forEach(client => {
-         if (client.readyState !== ws.OPEN) {
-           return;
-         }
-         client.send(JSON.stringify({
-           playerID: message.playerID,
-           username: message.username
-         }));
-       });
-       break;
-
+        //Placeholder
+        break;
       case "reset":
-        wsServer.clients.forEach(client => {
-          if (client.readyState !== ws.OPEN) {
-            return;
-          }
-          client.send(JSON.stringify({
-            reset: message.reset
-          }));
-        });
+        //Placeholder
         break;
       default:
         socket.send(JSON.stringify({
           type: "error"
         }));
     }
+    sendCommand(message);
+  });
 
-    socket.on('error', function (exc) {
+  socket.on('error', function (exc) {
     console.log("Socket Server Error: " + exc);
-    });
-
   });
 });
 
-server.on('error', function (exc) {
-    sys.log("Server Error: " + exc);
-});
-
 wsServer.on('error', function (exc) {
-    sys.log("WS Server Error: " + exc);
+  sys.log("WS Server Error: " + exc);
 });
 
-
+function sendCommand(message) {
+  console.log("To Client:");
+  console.log(message);
+  console.log("\n");
+  wsServer.clients.forEach(client => {
+    if (client.readyState !== ws.OPEN) {
+      return;
+    }
+    client.send(JSON.stringify({
+      type: message.type,
+      jump: message.jump,
+      playerID: message.playerID,
+      dash: message.dash,
+      moveLeft: message.moveLeft,
+      moveRight: message.moveRight,
+      username: message.username,
+      reset: message.reset
+    }));
+  });
+}
 
 function bin2string(array) {
   var result = "";
@@ -208,9 +148,3 @@ function bin2string(array) {
   }
   return result;
 }
-
-
-
-server.listen(port, () => {
-    console.log('Server is running on port: %s', port);
-});

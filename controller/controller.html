@@ -1,215 +1,34 @@
 <!DOCTYPE HTML>
-
 <html>
-  
 
-  <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<head>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="manifest" href="manifest.json">
+      <img class="buttonimg" src="./cloud1.png" style="left: -30px">
+      <img class="buttonimg" src="./cloud2.png" style="width:80px;top: 230px; left: 250px">
+      <img class="buttonimg" src="./cloud1.png" style="width:180px;top: 230px; right: 0px">
+      <img class="buttonimg" src="./cloud3.png" style="width:120px;top: 20px; left: 350px">
+      <img class="buttonimg" src="./cloud3.png" style="width:180px;top:250px; left: -30px">
+      <div class="inputContainer">
+            <input id="inputText" oninput="resetInputColor()" type="text" maxlength="10" placeholder="Choose your name ..." name="lname">
+            <br>
+            <button id="submitButton">Submit</button>
+      </div>
+      <p>
+            ... and then rotate your device.
+            <br>
+            <img class="rotateimg" src="./rotatedevice.png">
+      </p>
+      <button id="leftButton">Left</button>
+      <button id="rightButton">Right</button>
+      <button id="jumpButton">Jump</button>
+      <button id="dashButton">Dash</button>
 
+      <script type="text/javascript" src="./controller.js"></script>
+</head>
 
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link rel="manifest" href="manifest.json">
-  <img class="buttonimg" src="./cloud1.png" style="left: -30px">
-  <img class="buttonimg" src="./cloud2.png" style="width:80px;top: 230px; left: 250px">
-  <img class="buttonimg" src="./cloud1.png" style="width:180px;top: 230px; right: 0px">
-  <img class="buttonimg" src="./cloud3.png" style="width:120px;top: 20px; left: 350px">
-  <img class="buttonimg" src="./cloud3.png" style="width:180px;top:250px; left: -30px">
-  <div class="inputContainer"> 
-  <input id="inputText" oninput="resetInputColor()" type="text" maxlength="10" placeholder="Choose your name ..." name="lname"><br>
-  <button id="submitButton">Submit</button>
-  </div>
-  <p>
-  ... and then rotate your device.<br>
-  <img class="rotateimg" src="./rotatedevice.png">
-  </p>
-  <button id ="leftButton">Left</button>
-  <button id = "rightButton">Right</button>
-  <button id ="jumpButton">Jump</button>
-  <button id = "dashButton">Dash</button>
-	
-      <script type="text/javascript">
+<body scroll="no">
+</body>
 
-
-         if(!getCookie("playerID")) {
-            setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
-         }
-        document.addEventListener('touchmove', function (event) {
-          event.preventDefault();
-         }, false);
-
-         var ws = new WebSocket("ws://193.170.135.163:3000");
-
-
-        //prevent pinch to zoom on ios
-        
-         document.addEventListener('touchmove', function (event) {
-          if (event.scale !== 1) { event.preventDefault(); }
-         }, false);
-
-         var lastTouchEnd = 0;
-         document.addEventListener('touchend', function (event) {
-           preventDoubleTapZoom(event);
-         }, false);
-         
-
-         document.getElementById("rightButton").addEventListener('touchstart', function(event) {
-             right();
-             preventDoubleTapZoom(event)
-         });
-
-         document.getElementById("submitButton").addEventListener('touchstart', function(e){
-          document.getElementById("inputText").style.backgroundColor = "green";
-          document.getElementById("inputText").style.color = "white";
-          ws.send(JSON.stringify({type: "username", playerID: ""+getCookie("playerID"), username: document.getElementById("inputText").value }));
-         });
-        
-        document.getElementById("inputText").addEventListener('keydown', function(e) {
-          if (e.keyCode == 13) {
-            document.getElementById("inputText").style.backgroundColor = "green";
-            document.getElementById("inputText").style.color = "white";
-            ws.send(JSON.stringify({type: "username", playerID: ""+getCookie("playerID"), username: document.getElementById("inputText").value }));
-          }
-        });
-
-         document.getElementById("rightButton").addEventListener('touchend', function(event) {
-             rightUp();
-             preventDoubleTapZoom(event)
-         });
-
-         document.getElementById("leftButton").addEventListener('touchstart', function(event) {
-             left();
-             preventDoubleTapZoom(event)
-         });
-
-         document.getElementById("leftButton").addEventListener('touchend', function(event) {
-             leftUp();
-             preventDoubleTapZoom(event)
-         });
-
-          document.getElementById("jumpButton").addEventListener('touchstart', function(event) {
-             jump();
-             preventDoubleTapZoom(event)
-         });
-
-         document.getElementById("dashButton").addEventListener('touchstart', function(event) {
-             dash();
-             preventDoubleTapZoom(event)
-         });
-
-         function WebSocketTest()
-         {
-            if ("WebSocket" in window)
-            {
-               alert("WebSocket is supported by your Browser!");
-               
-               // Let us open a web socket
-              
-				
-               ws.onopen = function()
-               {
-                  // Web Socket is connected, send data using send()
-
-               };
-				
-               ws.onmessage = function (evt) 
-               { 
-                  var received_msg = evt.data;
-                  //alert("Message is received...");
-                  //alert(received_msg);
-               };
-				
-               ws.onclose = function()
-               { 
-                  // websocket is closed.
-                  alert("Connection is closed..."); 
-               };
-					
-               window.onbeforeunload = function(event) {
-                  socket.close();
-               };
-            }
-            
-            else
-            {
-               // The browser doesn't support WebSocket
-               alert("WebSocket NOT supported by your Browser!");
-            }
-         }
-
-         function resetInputColor(){
-          document.getElementById("inputText").style.backgroundColor = "white";
-          document.getElementById("inputText").style.color = "black";
-         }
-
-         function jump() {
-            ws.send(JSON.stringify({type: "jump", playerID: ""+getCookie("playerID")}));
-         }
-
-         function dash() {
-            ws.send(JSON.stringify({type: "dash", playerID: ""+getCookie("playerID")}));
-         }
-
-         function left() {
-            ws.send(JSON.stringify({type: "left", playerID: ""+ getCookie("playerID")}));
-         }
-
-         function right() {
-            ws.send(JSON.stringify({type: "right", playerID: ""+ getCookie("playerID")}));
-         }
-
-         function leftUp() {
-            ws.send(JSON.stringify({type: "leftUp", playerID: ""+ getCookie("playerID")}));
-         }
-
-         function rightUp() {
-            ws.send(JSON.stringify({type: "rightUp", playerID: ""+ getCookie("playerID")}));
-         }
-
-         function preventDoubleTapZoom(event) {
-          
-          var now = (new Date()).getTime();
-          if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-          }
-          lastTouchEnd = now;
-          
-         }
-
-         function setCookie(name,value,days) {
-          var expires = "";
-          if (days) {
-             var date = new Date();
-             date.setTime(date.getTime() + (days*24*60*60*1000));
-             expires = "; expires=" + date.toUTCString();
-          }
-          document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-         }
-
-         function getCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-               var c = ca[i];
-               while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-               }
-            return null;
-         }
-
-         function eraseCookie(name) {   
-          document.cookie = name+'=; Max-Age=-99999999;';  
-         }
-
-      </script>
-
-		
-   </head>
-   <body>
-   <body id="container" scroll="no" bgcolor="#BAC9FF">
-     
-         <!--<a href="javascript:WebSocketTest()">Init Websocket</a>-->
-      
-
-      
-   </body>
 </html>

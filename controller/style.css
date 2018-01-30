@@ -1,167 +1,125 @@
-
-.buttonimg{
+.buttonimg {
 	position: absolute;
 	opacity: 0.5;
 	display: inline-block;
-	-webkit-touch-callout: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select:none;
-	user-select:none;
-	-o-user-select:none;
-	outline: none;
 }
 
-
-
-button{
+button {
 	position: relative;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
-    -webkit-tap-highlight-color: transparent;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-tap-highlight-color: transparent;
 	color: white;
 	font-size: 25px;
 	font-weight: bold;
-	text-align: center;
 	background: transparent url("./snow.png") center no-repeat;
 	background-size: 100%;
 	background-position: center;
 	border: none;
-	height:400px;
-	width:20%;
+	height: 400px;
+	width: 20%;
 	display: inline-block;
-	-webkit-touch-callout: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-ms-user-select:none;
-	user-select:none;
-	-o-user-select:none;
-	outline: none;
-	overflow: auto;
-	margin: 0;
-	padding: 0;
 }
 
-html, body {
-	overflow: auto;
-	margin: 0;
-	padding: 0;
-}
-
-
-#leftButton {
-	float: left;
-	margin-left: 0px;
+html,
+body {
+	background-color: #BAC9FF;
 }
 
 #rightButton {
-	float: left;
 	margin-left: 10px;
 }
 
-#jumpButton {
+#jumpButton,
+#dashButton {
 	float: right;
-	margin-right: 0px;
 }
 
 #dashButton {
-	float: right;
 	margin-right: 10px;
 }
 
-
-
-
 button:active {
-  color: white;
-  opacity: 0.6;
+	color: white;
+	opacity: 0.6;
 }
 
+.buttonimg,
+button,
+p,
+.inputContainer,
+.rotateimg {
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-o-user-select: none;
+	outline: none;
+}
 
+html,
+button,
+body {
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
 
+#leftButton,
+#rightButton,
+p,
+.inputContainer {
+	float: left;
+}
+
+p,
+.inputContainer,
+button,
+#inputText {
+	text-align: center;
+}
 
 @media screen and (max-aspect-ratio: 13/9) {
-	p{
+	p {
 		position: relative;
 		padding-top: 0%;
 		color: white;
 		vertical-align: center;
-		text-align: center;
 		font-family: "Arial";
-		float: left;
-		-webkit-touch-callout: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-ms-user-select:none;
-	user-select:none;
-	-o-user-select:none;
-	outline: none;
 	}
-
-
-
-	.inputContainer{
+	.inputContainer {
 		position: relative;
 		width: 100%;
 		padding-top: 40%;
 		vertical-align: center;
-		text-align: center;
 		font-family: "Arial";
-		float: left;
-		-webkit-touch-callout: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-ms-user-select:none;
-	user-select:none;
-	-o-user-select:none;
-	outline: none;
 	}
-
 	#inputText {
 		font-size: 14px;
-		text-align: center;
 		height: 20px;
 		width: 140px;
 		margin-bottom: 10px;
 		outline: none;
 	}
-
-	#submitButton{
-
+	#submitButton {
 		display: initial;
 		font-size: 12px;
 		height: 80px;
 	}
-
 	.rotateimg {
-		position: relative;
-		align-self: center;
 		width: 50%;
-		vertical-align: center;
-	-webkit-touch-callout: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select:none;
-	user-select:none;
-	-o-user-select:none;
-	outline: none;
 	}
-
-  button, .buttonimg {
-  	display: none;
-  }
-
-
+	button,
+	.buttonimg {
+		display: none;
+	}
 }
 
 @media screen and (min-aspect-ratio: 13/9) {
-	p, .inputContainer, .rotateimg {
+	p,
+	.inputContainer,
+	.rotateimg {
 		display: none;
 	}
-
-
 }
