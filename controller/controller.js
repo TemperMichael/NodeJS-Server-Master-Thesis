@@ -1,9 +1,25 @@
+if (!getCookie("playerID")) {
+    setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+}
+
 var ws;
 var connect = function () {
-    ws = new WebSocket('ws://193.170.135.163:3000');
+    ws = new WebSocket('ws://10.59.0.74:3000');
     ws.onopen = function () {
-        console.log("socket open");
+        ws.send(JSON.stringify({
+            type: "username",
+            playerID: "" + getCookie("playerID"),
+            username: "getInitialUserInfo"
+        }));
     };
+    ws.onmessage = function (e) {
+        console.log("Received: " + e.data);
+        const message = JSON.parse(e.data);
+        if (getCookie("playerID") + "Game" == message.playerID) {
+            console.log("Received Name! " + message.username);
+            document.getElementById('usernameLabel').innerHTML = message.username;
+        }
+    }
     ws.onerror = function (err) {
         console.error('Socket encountered error: ', err.message, 'Closing socket');
         ws.close();
@@ -17,11 +33,10 @@ var connect = function () {
 };
 
 connect();
+
 var lastTouchEnd = 0;
 
-if (!getCookie("playerID")) {
-    setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
-}
+
 
 document.addEventListener('touchmove', function (event) {
     event.preventDefault();
@@ -64,6 +79,7 @@ document.getElementById("jumpButton").addEventListener('touchstart', function (e
 document.getElementById("dashButton").addEventListener('touchstart', function (event) {
     sendCommand("dash");
 });
+
 
 function setInputName() {
     document.getElementById("inputText").style.backgroundColor = "green";
