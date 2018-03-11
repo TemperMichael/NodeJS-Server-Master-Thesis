@@ -15,7 +15,7 @@ button {
 	background-size: 100%;
 	background-position: center;
 	border: none;
-	height: 400px;
+	height: 100%;
 	width: 20%;
 	display: inline-block;
 }
@@ -23,6 +23,7 @@ button {
 html,
 body {
 	background-color: #BAC9FF;
+	height: 100%;
 }
 
 button:active {
@@ -71,6 +72,7 @@ button,
 #landscapeContainer {
 	display: flex;
 	justify-content: space-between;
+	height: 100%;
 }
 
 p {

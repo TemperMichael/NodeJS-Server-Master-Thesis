@@ -4,7 +4,7 @@ if (!getCookie("playerID")) {
 
 var ws;
 var connect = function () {
-    ws = new WebSocket('ws://193.170.135.163:3000');
+    ws = new WebSocket('ws://10.59.0.74:3000');
     ws.onopen = function () {
         ws.send(JSON.stringify({
             type: "username",

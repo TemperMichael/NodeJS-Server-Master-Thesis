@@ -36,25 +36,16 @@ connect();
 
 var joystick;
 var joystickAvailable = false;
+var direction = "";
+var lastDirection = "";
+
 if (Math.abs(window.orientation) === 90) {
-    joystick = new VirtualJoystick({
-        mouseSupport: true,
-        limitStickTravel: true,
-        strokeStyle: "white",
-        stickRadius: 50
-    });
-    joystickAvailable = true;
+    setupJoystick();
 }
 
 window.addEventListener("orientationchange", function () {
     if (Math.abs(window.orientation) === 90) {
-        joystick = new VirtualJoystick({
-            mouseSupport: true,
-            limitStickTravel: true,
-            strokeStyle: "white",
-            stickRadius: 50
-        });
-        joystickAvailable = true;
+        setupJoystick();
     } else {
         if (joystickAvailable) {
             joystick.destroy();
@@ -63,21 +54,43 @@ window.addEventListener("orientationchange", function () {
     }
 }, false);
 
-if (joystickAvailable) {
-    if (joystick.right()) {
-        cube.position.x = cube.position.x + 60 * frameTime;
-    }
-    if (joystick.left()) {
-        cube.position.x = cube.position.x - 60 * frameTime;
-    }
-    if (joystick.up()) {
-        cube.position.y = cube.position.y + 60 * frameTime;
-    }
-    if (joystick.down()) {
-        cube.position.y = cube.position.y - 60 * frameTime;
-    }
-}
 
+function setupJoystick() {
+    joystick = new VirtualJoystick({
+        mouseSupport: true,
+        limitStickTravel: true,
+        strokeStyle: "white",
+        stickRadius: 50
+    });
+    joystickAvailable = true;
+    joystick.addEventListener('touchStart', function () {
+        setInterval(function () {
+            if (joystick.right()) {
+                direction = "right";
+            }
+            if (joystick.left()) {
+                direction = "left";
+            }
+            if (joystick.up()) {
+
+            }
+            if (joystick.down()) {
+
+            }
+
+            if (lastDirection != direction) {
+                sendCommand(direction);
+                lastDirection = direction;
+            }
+        }, 100);
+    });
+
+    joystick.addEventListener('touchEnd', function () {
+        sendCommand(lastDirection + "Up");
+        direction = "";
+        lastDirection = "";
+    });
+}
 
 
 
@@ -127,7 +140,7 @@ function resetInputColor() {
 }
 
 function sendCommand(commandName) {
-    preventDoubleTapZoom(event)
+    // preventDoubleTapZoom(event)
     ws.send(JSON.stringify({
         type: commandName,
         playerID: "" + getCookie("playerID")
