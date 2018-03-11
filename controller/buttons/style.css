@@ -11,7 +11,7 @@ button {
 	color: white;
 	font-size: 25px;
 	font-weight: bold;
-	background: transparent url("./snow.png") center no-repeat;
+	background: transparent url("../snow.png") center no-repeat;
 	background-size: 100%;
 	background-position: center;
 	border: none;

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="manifest" href="../manifest.json">
+      <img class="buttonimg" src="../cloud1.png" style="left: -30px">
+      <img class="buttonimg" src="../cloud2.png" style="width:80px;top: 230px; left: 250px">
+      <img class="buttonimg" src="../cloud1.png" style="width:180px;top: 230px; right: 0px">
+      <img class="buttonimg" src="../cloud3.png" style="width:120px;top: 20px; left: 410px">
+      <img class="buttonimg" src="../cloud3.png" style="width:180px;top:250px; left: -30px">
+      <div class="inputContainer">
+            <input id="inputText" oninput="resetInputColor()" type="text" maxlength="10" placeholder="Choose your name ..." name="lname">
+            <br>
+            <button id="submitButton">Submit</button>
+      </div>
+      <p id="rotateInformation">
+            ... and then rotate your device.
+            <br>
+            <img class="rotateimg" src="../rotatedevice.png">
+      </p>
+      <div id="landscapeContainer">
+            <button id="leftButton">Left</button>
+            <button id="rightButton">Right</button>
+            <p id="usernameLabel"></p>
+            <button id="dashButton">Dash</button>
+            <button id="jumpButton">Jump</button>
+      </div>
+
+      <script type="text/javascript" src="./controller.js"></script>
+</head>
+
+<body scroll="no">
+</body>
+
+</html>

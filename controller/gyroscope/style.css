@@ -1,0 +1,118 @@
+.buttonimg {
+	position: absolute;
+	opacity: 0.5;
+	display: inline-block;
+}
+
+button {
+	position: relative;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-tap-highlight-color: transparent;
+	color: white;
+	font-size: 25px;
+	font-weight: bold;
+	background: transparent url("../snow.png") center no-repeat;
+	background-size: 100%;
+	background-position: center;
+	border: none;
+	height: 400px;
+	width: 20%;
+	display: inline-block;
+}
+
+html,
+body {
+	background-color: #BAC9FF;
+}
+
+button:active {
+	color: white;
+	opacity: 0.6;
+}
+
+.buttonimg,
+button,
+p,
+.inputContainer,
+.rotateimg {
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-o-user-select: none;
+	outline: none;
+}
+
+html,
+button,
+body {
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
+
+#usernameLabel {
+	width: 18%;
+	height: 28px;
+	margin-top: 10%;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+p,
+.inputContainer,
+button,
+#inputText {
+	text-align: center;
+}
+
+#landscapeContainer {
+	display: flex;
+	justify-content: space-between;
+}
+
+p {
+	position: relative;
+	color: white;
+	font-family: "Arial";
+}
+
+@media screen and (max-aspect-ratio: 13/9) {
+	.inputContainer {
+		position: relative;
+		width: 100%;
+		padding-top: 40%;
+		vertical-align: center;
+		font-family: "Arial";
+	}
+	#inputText {
+		font-size: 14px;
+		height: 20px;
+		width: 140px;
+		margin-bottom: 10px;
+		outline: none;
+	}
+	#submitButton {
+		display: initial;
+		font-size: 12px;
+		height: 80px;
+	}
+	.rotateimg {
+		width: 50%;
+	}
+	button,
+	.buttonimg,
+	#usernameLabel {
+		display: none;
+	}
+}
+
+@media screen and (min-aspect-ratio: 13/9) {
+	#rotateInformation,
+	.inputContainer,
+	.rotateimg {
+		display: none;
+	}
+}
