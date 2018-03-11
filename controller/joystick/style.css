@@ -15,7 +15,7 @@ button {
 	background-size: 100%;
 	background-position: center;
 	border: none;
-	height: 400px;
+	height: 100%;
 	width: 20%;
 	display: inline-block;
 }
@@ -53,6 +53,11 @@ body {
 	padding: 0;
 }
 
+html,
+body {
+	height: 100%;
+}
+
 #usernameLabel {
 	width: 18%;
 	height: 28px;
@@ -70,7 +75,12 @@ button,
 
 #landscapeContainer {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
+	height: 100%;
+}
+
+#jumpButton {
+	margin-left: 3px;
 }
 
 p {
