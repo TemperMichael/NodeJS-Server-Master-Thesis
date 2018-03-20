@@ -4,7 +4,7 @@ if (!getCookie("playerID")) {
 
 var ws;
 var connect = function () {
-    ws = new WebSocket('ws://193.170.135.163:3000');
+    ws = new WebSocket('ws://10.59.0.74:3000');
     ws.onopen = function () {
         ws.send(JSON.stringify({
             type: "username",
@@ -34,9 +34,49 @@ var connect = function () {
 
 connect();
 
+var gn;
+var direction = "";
+var lastDirection = "";
+
+if (Math.abs(window.orientation) === 90) {
+    setupGyroscope();
+}
+
+window.addEventListener("orientationchange", function () {
+    if (Math.abs(window.orientation) === 90) {
+        setupGyroscope();
+    } else {
+        gn.stop();
+        sendCommand(direction + "Up");
+        lastDirection = direction + "Up";
+    }
+}, false);
+
+
+function setupGyroscope() {
+    gn = new GyroNorm();
+    gn.init().then(function () {
+        gn.start(function (data) {
+            if (data.do.beta > 7) {
+                direction = "right";
+            } else if (data.do.beta < -7) {
+                direction = "left";
+            } else {
+                sendCommand(direction + "Up");
+                lastDirection = direction + "Up";
+            }
+
+            if (lastDirection != direction) {
+                sendCommand(direction);
+                lastDirection = direction;
+            }
+        });
+    }).catch(function (e) {
+        alert(e.message);
+    });
+}
+
 var lastTouchEnd = 0;
-
-
 
 document.addEventListener('touchmove', function (event) {
     event.preventDefault();
@@ -54,22 +94,6 @@ document.getElementById("inputText").addEventListener('keydown', function (e) {
     if (e.keyCode == 13) {
         setInputName();
     }
-});
-
-document.getElementById("rightButton").addEventListener('touchstart', function (event) {
-    sendCommand("right");
-});
-
-document.getElementById("rightButton").addEventListener('touchend', function (event) {
-    sendCommand("rightUp");
-});
-
-document.getElementById("leftButton").addEventListener('touchstart', function (event) {
-    sendCommand("left");
-});
-
-document.getElementById("leftButton").addEventListener('touchend', function (event) {
-    sendCommand("leftUp");
 });
 
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {

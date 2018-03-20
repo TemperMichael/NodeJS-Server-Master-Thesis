@@ -75,6 +75,7 @@ VirtualJoystick.touchScreenAvailable = function () {
 	return 'createTouch' in document ? true : false;
 }
 
+
 /**
  * microevents.js - https://github.com/jeromeetienne/microevent.js
  */
