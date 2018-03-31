@@ -1,10 +1,6 @@
 var lastTouchEnd = 0;
 
 var Connector = function (ipAdress, port) {
-  if (!this.getCookie("playerID")) {
-    this.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
-  }
-
   var ws;
   ws = new WebSocket("ws://" + ipAdress + ":" + port);
 

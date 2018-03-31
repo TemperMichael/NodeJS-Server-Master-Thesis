@@ -1,11 +1,15 @@
 var connector = new Connector("10.59.0.74", "3000");
 
+if (!connector.getCookie("playerID")) {
+    connector.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+}
+
 connector.onOpen = function (event) {
-    connector.sendCommand(JSON.stringify({
+    connector.sendCommand({
         type: "username",
         playerID: "" + connector.getCookie("playerID"),
         username: "getInitialUserInfo"
-    }));
+    });
 }
 
 connector.onMessage = function (event) {
@@ -80,11 +84,11 @@ document.getElementById("dashButton").addEventListener('touchstart', function (e
 function setInputName() {
     document.getElementById("inputText").style.backgroundColor = "green";
     document.getElementById("inputText").style.color = "white";
-    connector.sendCommand(JSON.stringify({
+    connector.sendCommand({
         type: "username",
         playerID: "" + connector.getCookie("playerID"),
         username: document.getElementById("inputText").value
-    }));
+    });
 }
 
 function resetInputColor() {

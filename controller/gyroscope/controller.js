@@ -1,17 +1,21 @@
 var connector = new Connector("10.59.0.74", "3000");
 
+if (!connector.getCookie("playerID")) {
+    connector.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+}
+
 connector.onOpen = function (event) {
-    connector.sendCommand(JSON.stringify({
+    connector.sendCommand({
         type: "username",
-        playerID: "" + getCookie("playerID"),
+        playerID: "" + connector.getCookie("playerID"),
         username: "getInitialUserInfo"
-    }));
+    });
 }
 
 connector.onMessage = function (event) {
     console.log("Received: " + event.data);
     const message = JSON.parse(event.data);
-    if (getCookie("playerID") + "Game" == message.playerID) {
+    if (connector.getCookie("playerID") + "Game" == message.playerID) {
         console.log("Received Name! " + message.username);
         document.getElementById('usernameLabel').innerHTML = message.username;
     }
@@ -32,7 +36,7 @@ window.addEventListener("orientationchange", function () {
         gn.stop();
         connector.sendCommand({
             type: direction + "Up",
-            playerID: "" + getCookie("playerID")
+            playerID: "" + connector.getCookie("playerID")
         });
         lastDirection = direction + "Up";
     }
@@ -51,7 +55,7 @@ function setupGyroscope() {
                 direction = direction + "Up";
                 connector.sendCommand({
                     type: direction,
-                    playerID: "" + getCookie("playerID")
+                    playerID: "" + connector.getCookie("playerID")
                 });
                 lastDirection = direction;
             }
@@ -59,7 +63,7 @@ function setupGyroscope() {
             if (lastDirection != direction) {
                 connector.sendCommand({
                     type: direction,
-                    playerID: "" + getCookie("playerID")
+                    playerID: "" + connector.getCookie("playerID")
                 });
                 lastDirection = direction;
             }
@@ -90,25 +94,25 @@ document.getElementById("inputText").addEventListener('keydown', function (e) {
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
     connector.sendCommand({
         type: "jump",
-        playerID: "" + getCookie("playerID")
+        playerID: "" + connector.getCookie("playerID")
     });
 });
 
 document.getElementById("dashButton").addEventListener('touchstart', function (event) {
     connector.sendCommand({
         type: "dash",
-        playerID: "" + getCookie("playerID")
+        playerID: "" + connector.getCookie("playerID")
     });
 });
 
 function setInputName() {
     document.getElementById("inputText").style.backgroundColor = "green";
     document.getElementById("inputText").style.color = "white";
-    ws.send(JSON.stringify({
+    ws.send({
         type: "username",
-        playerID: "" + getCookie("playerID"),
+        playerID: "" + connector.getCookie("playerID"),
         username: document.getElementById("inputText").value
-    }));
+    });
 }
 
 function resetInputColor() {
