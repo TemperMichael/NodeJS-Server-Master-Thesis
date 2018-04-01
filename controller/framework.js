@@ -26,7 +26,7 @@ var Connector = function (ipAdress, port) {
       console.log('Socket is closed. Reconnect will be attempted in 1 second.', event.reason);
       setTimeout(function () {
         startWebsocket(connector);
-      }, 1000);
+      }, 1500);
     };
     connector.ws = ws;
   }
