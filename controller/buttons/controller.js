@@ -22,7 +22,7 @@ connector.onMessage = function (event) {
 }
 
 document.addEventListener('touchmove', function (event) {
-    connector.prevenScroll(event);
+    connector.preventScroll(event);
 }, false);
 
 document.addEventListener('touchend', function (event) {

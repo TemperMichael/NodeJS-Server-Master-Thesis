@@ -1,29 +1,35 @@
 var lastTouchEnd = 0;
 
 var Connector = function (ipAdress, port) {
+  var _ipAdress = ipAdress;
+  var _port = port;
   var ws;
-  ws = new WebSocket("ws://" + ipAdress + ":" + port);
 
-  ws.onopen = (event) => {
-    this.onOpen(event);
-  };
-  ws.onmessage = (event) => {
-    this.onMessage(event);
+  startWebsocket(this);
+
+  function startWebsocket(connector) {
+    ws = new WebSocket("ws://" + _ipAdress + ":" + _port);
+
+    ws.onopen = (event) => {
+      connector.onOpen(event);
+    };
+    ws.onmessage = (event) => {
+      connector.onMessage(event);
+    }
+    ws.onerror = (error) => {
+      connector.onError(error);
+      console.error('Socket encountered error: ', error.message, 'Closing socket');
+      ws.close();
+    };
+    ws.onclose = (event) => {
+      connector.onClose(event);
+      console.log('Socket is closed. Reconnect will be attempted in 1 second.', event.reason);
+      setTimeout(function () {
+        startWebsocket(connector);
+      }, 1000);
+    };
+    connector.ws = ws;
   }
-  ws.onerror = function (error) {
-    this.onError(error);
-    console.error('Socket encountered error: ', error.message, 'Closing socket');
-    ws.close();
-  };
-  ws.onclose = function (event) {
-    this.onClose(event);
-    console.log('Socket is closed. Reconnect will be attempted in 1 second.', event.reason);
-    setTimeout(function () {
-      connect();
-    }, 1000);
-  };
-
-  this.ws = ws;
 }
 
 Connector.prototype.onOpen = function (event) {};
@@ -34,17 +40,14 @@ Connector.prototype.onClose = function (event) {};
 
 Connector.prototype.onError = function (event) {};
 
-
 Connector.prototype.sendCommand = function (command) {
   this.ws.send(JSON.stringify(command));
 }
 
 Connector.prototype.preventDoubleTapZoom = function (event) {
-  var now = (new Date()).getTime();
-  if (now - lastTouchEnd <= 300) {
+  if (event.target.nodeName != "INPUT") {
     event.preventDefault();
   }
-  lastTouchEnd = now;
 }
 
 Connector.prototype.preventScroll = function (event) {
