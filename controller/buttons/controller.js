@@ -1,22 +1,20 @@
 var connector = new Connector("10.59.0.74", "3000");
 
-if (!connector.getCookie("playerID")) {
-    connector.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+if (!connector.getId()) {
+    connector.setId();
 }
 
 connector.onOpen = function (event) {
-    connector.sendCommand({
-        type: "username",
-        playerID: "" + connector.getCookie("playerID"),
-        username: "getInitialUserInfo"
-    });
+    connector.setUsername("getInitialUserInfo");
 }
 
 connector.onMessage = function (event) {
     console.log("Received: " + event.data);
+}
+
+connector.onUsername = function (event) {
     const message = JSON.parse(event.data);
-    if (connector.getCookie("playerID") + "Game" == message.playerID) {
-        console.log("Received Name! " + message.username);
+    if (connector.getId() + "Game" == message.playerID) {
         document.getElementById('usernameLabel').innerHTML = message.username;
     }
 }
@@ -29,6 +27,30 @@ document.addEventListener('touchend', function (event) {
     connector.preventDoubleTapZoom(event);
 }, false);
 
+document.getElementById("rightButton").addEventListener('touchstart', function (event) {
+    connector.moveRight();
+});
+
+document.getElementById("rightButton").addEventListener('touchend', function (event) {
+    connector.stopRight();
+});
+
+document.getElementById("leftButton").addEventListener('touchstart', function (event) {
+    connector.moveLeft();
+});
+
+document.getElementById("leftButton").addEventListener('touchend', function (event) {
+    connector.stopLeft();
+});
+
+document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
+    connector.jump();
+});
+
+document.getElementById("dashButton").addEventListener('touchstart', function (event) {
+    connector.dash();
+});
+
 document.getElementById("submitButton").addEventListener('touchstart', function (e) {
     setInputName();
 });
@@ -39,56 +61,10 @@ document.getElementById("inputText").addEventListener('keydown', function (e) {
     }
 });
 
-document.getElementById("rightButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "right",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("rightButton").addEventListener('touchend', function (event) {
-    connector.sendCommand({
-        type: "rightUp",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("leftButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "left",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("leftButton").addEventListener('touchend', function (event) {
-    connector.sendCommand({
-        type: "leftUp",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "jump",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("dashButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "dash",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
 function setInputName() {
     document.getElementById("inputText").style.backgroundColor = "green";
     document.getElementById("inputText").style.color = "white";
-    connector.sendCommand({
-        type: "username",
-        playerID: "" + connector.getCookie("playerID"),
-        username: document.getElementById("inputText").value
-    });
+    connector.setUsername(document.getElementById("inputText").value);
 }
 
 function resetInputColor() {

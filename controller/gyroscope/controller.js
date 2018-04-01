@@ -1,22 +1,20 @@
 var connector = new Connector("10.59.0.74", "3000");
 
-if (!connector.getCookie("playerID")) {
-    connector.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
+if (!connector.getId()) {
+    connector.setId();
 }
 
 connector.onOpen = function (event) {
-    connector.sendCommand({
-        type: "username",
-        playerID: "" + connector.getCookie("playerID"),
-        username: "getInitialUserInfo"
-    });
+    connector.setUsername("getInitialUserInfo");
 }
 
 connector.onMessage = function (event) {
     console.log("Received: " + event.data);
+}
+
+connector.onUsername = function (event) {
     const message = JSON.parse(event.data);
-    if (connector.getCookie("playerID") + "Game" == message.playerID) {
-        console.log("Received Name! " + message.username);
+    if (connector.getId() + "Game" == message.playerID) {
         document.getElementById('usernameLabel').innerHTML = message.username;
     }
 }
@@ -34,14 +32,14 @@ window.addEventListener("orientationchange", function () {
         setupGyroscope();
     } else {
         gn.stop();
-        connector.sendCommand({
-            type: direction + "Up",
-            playerID: "" + connector.getCookie("playerID")
-        });
-        lastDirection = direction + "Up";
+        if (direction == "left") {
+            connector.stopLeft();
+        } else if (direction == "right") {
+            connector.stopRight();
+        }
+        lastDirection = direction + "stop";
     }
 }, false);
-
 
 function setupGyroscope() {
     gn = new GyroNorm();
@@ -52,19 +50,30 @@ function setupGyroscope() {
             } else if (data.do.beta < -10) {
                 direction = "left";
             } else {
-                direction = direction + "Up";
-                connector.sendCommand({
-                    type: direction,
-                    playerID: "" + connector.getCookie("playerID")
-                });
-                lastDirection = direction;
+                if (direction == "left") {
+                    direction = "leftstop"
+                } else if (direction == "right") {
+                    direction = "rightstop"
+                }
             }
 
             if (lastDirection != direction) {
-                connector.sendCommand({
-                    type: direction,
-                    playerID: "" + connector.getCookie("playerID")
-                });
+                switch (direction) {
+                    case "left":
+                        connector.moveLeft();
+                        break;
+                    case "right":
+                        connector.moveRight();
+                        break;
+                    case "leftstop":
+                        connector.stopLeft();
+                        break;
+                    case "rightstop":
+                        connector.stopRight();
+                        break;
+                    default:
+                        break;
+                }
                 lastDirection = direction;
             }
         });
@@ -81,6 +90,14 @@ document.addEventListener('touchend', function (event) {
     connector.preventDoubleTapZoom(event);
 }, false);
 
+document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
+    connector.jump();
+});
+
+document.getElementById("dashButton").addEventListener('touchstart', function (event) {
+    connector.dash();
+});
+
 document.getElementById("submitButton").addEventListener('touchstart', function (e) {
     setInputName();
 });
@@ -91,28 +108,10 @@ document.getElementById("inputText").addEventListener('keydown', function (e) {
     }
 });
 
-document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "jump",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
-document.getElementById("dashButton").addEventListener('touchstart', function (event) {
-    connector.sendCommand({
-        type: "dash",
-        playerID: "" + connector.getCookie("playerID")
-    });
-});
-
 function setInputName() {
     document.getElementById("inputText").style.backgroundColor = "green";
     document.getElementById("inputText").style.color = "white";
-    ws.send({
-        type: "username",
-        playerID: "" + connector.getCookie("playerID"),
-        username: document.getElementById("inputText").value
-    });
+    connector.setUsername(document.getElementById("inputText").value);
 }
 
 function resetInputColor() {

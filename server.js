@@ -76,39 +76,15 @@ const wsServer = new ws.Server({
 wsServer.on("connection", socket => {
   socket.on("message", data => {
     const message = JSON.parse(data);
-    console.log("----------------\nFrom Client:");
+    console.log("----------------\nMessage:");
     console.log(message);
-    switch (message.type) {
-      case "jump":
-        message.jump = "true";
-        break;
-      case "dash":
-        message.dash = "true";
-        break;
-      case "left":
-        message.moveLeft = "true";
-        break;
-      case "right":
-        message.moveRight = "true";
-        break;
-      case "leftUp":
-        message.moveLeft = "false";
-        break;
-      case "rightUp":
-        message.moveRight = "false";
-        break;
-      case "username":
-        //Placeholder
-        break;
-      case "reset":
-        //Placeholder
-        break;
-      default:
-        socket.send(JSON.stringify({
-          type: "error"
-        }));
-    }
-    sendCommand(message);
+    console.log("\n");
+    wsServer.clients.forEach(client => {
+      if (client.readyState !== ws.OPEN) {
+        return;
+      }
+      client.send(JSON.stringify(message));
+    });
   });
 
   socket.on('error', function (exc) {
@@ -120,26 +96,6 @@ wsServer.on('error', function (exc) {
   sys.log("WS Server Error: " + exc);
 });
 
-function sendCommand(message) {
-  console.log("To Client:");
-  console.log(message);
-  console.log("\n");
-  wsServer.clients.forEach(client => {
-    if (client.readyState !== ws.OPEN) {
-      return;
-    }
-    client.send(JSON.stringify({
-      type: message.type,
-      jump: message.jump,
-      playerID: message.playerID,
-      dash: message.dash,
-      moveLeft: message.moveLeft,
-      moveRight: message.moveRight,
-      username: message.username,
-      reset: message.reset
-    }));
-  });
-}
 
 function bin2string(array) {
   var result = "";
