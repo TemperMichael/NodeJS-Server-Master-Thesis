@@ -110,7 +110,7 @@ Connector.prototype.onVector2D = function (event) {}
 
 Connector.prototype.onVector3D = function (event) {}
 
-// Sender
+// Methods
 
 Connector.prototype.sendCommand = function (command) {
   this.ws.send(JSON.stringify(command));
