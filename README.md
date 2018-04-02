@@ -45,7 +45,7 @@ After this, there are several points which have to be considered:
     ifconfig
     ```
     The IP address next to "inet" has to be used. (e.g.: 10.59.0.74) **Important**: The global IP address and port forwarding
-    have to be used when a external server is used instead of a server in the local network.
+    have to be used when an external server is used instead of a server in the local network.
   * The IP address and the port have to be entered in the following files:
     * In the controller files at:
       ```
