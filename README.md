@@ -1,6 +1,6 @@
 # Connector Framework
 
-This framework can be used to handle the connection between multiple mobile clients and a specific endpoint (server/client/game). 
+This [framework](framework.js) can be used to handle the connection between multiple mobile clients and a specific endpoint (server/client/game). 
 The repository consists beside the framework HTML templates for mobile controllers and
 a websocket server for a better understanding how the framework works and how it can be used. The framework was implemented in combination
 with a platformer game to test a typical use case scenario. The project of the game shows how the framework has to be used in the opposite endpoint and can
