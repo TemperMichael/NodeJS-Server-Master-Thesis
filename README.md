@@ -8,7 +8,7 @@ be found at the following link:
 
 [Platformer game](https://github.com/TemperMichael/Master-Thesis-Temper-Platformer)
 
-The framework has methods and listeners to cover the following points:
+The framework establishes a connection to a server via a WebSocket and has methods and listeners to cover the following points:
 * Messaging
 * Directions
 * Jump
@@ -20,7 +20,7 @@ The framework has methods and listeners to cover the following points:
 
 ## Getting started
 
-The project is based on WebSockets and Node.js and so both of them have to be installed at first. To install Node.js the following link can be used:
+The project is based on WebSockets and Node.js, so both of them have to be installed first. To install Node.js the following link can be used:
 
 [Node.js Installer](https://nodejs.org/en/#download)
 
