@@ -1,5 +1,3 @@
-var playerID;
-
 var Connector = function (ipAdress, port) {
   var _ipAdress = ipAdress;
   var _port = port;
@@ -235,7 +233,6 @@ Connector.prototype.getId = function () {
 
 Connector.prototype.setId = function () {
   this.setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
-  this.playerID = this.getId();
 }
 
 Connector.prototype.setCookie = function (name, value, days) {
