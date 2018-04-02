@@ -8,7 +8,7 @@ be found at the following link:
 
 [Platformer game](https://github.com/TemperMichael/Master-Thesis-Temper-Platformer)
 
-The framework has methods and listeners to cover the following points:
+The framework establishes a connection to a server via a WebSocket and has methods and listeners to cover the following points:
 * Messaging
 * Directions
 * Jump
@@ -20,7 +20,7 @@ The framework has methods and listeners to cover the following points:
 
 ## Getting started
 
-The project is based on WebSockets and Node.js and so both of them have to be installed at first. To install Node.js the following link can be used:
+The project is based on WebSockets and Node.js, so both of them have to be installed first. To install Node.js the following link can be used:
 
 [Node.js Installer](https://nodejs.org/en/#download)
 
@@ -45,7 +45,7 @@ After this, there are several points which have to be considered:
     ifconfig
     ```
     The IP address next to "inet" has to be used. (e.g.: 10.59.0.74) **Important**: The global IP address and port forwarding
-    have to be used when a external server is used instead of a server in the local network.
+    have to be used when an external server is used instead of a server in the local network.
   * The IP address and the port have to be entered in the following files:
     * In the controller files at:
       ```
