@@ -1,4 +1,4 @@
-var connector = new Connector("10.59.0.74", "3000");
+var connector = new Connector("91.250.101.23", "3000");
 
 if (!connector.getId()) {
     connector.setId();
