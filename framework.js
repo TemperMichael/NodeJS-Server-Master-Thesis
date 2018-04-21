@@ -53,6 +53,18 @@ var Connector = function (ipAdress, port) {
         case "vector3d":
           connector.onVector3D(event);
           break;
+        case "synchronizeServerTime":
+          connector.onSynchronizeServerTime(event);
+          break;
+        case "serverTimeUpdate":
+          connector.onServerTimeUpdate(event);
+          break;
+        case "enableDebugMode":
+          connector.onEnableDebugMode(event);
+          break;
+        case "disableDebugMode":
+          connector.onDisableDebugMode(event);
+          break;
         default:
           break;
       }
@@ -109,6 +121,14 @@ Connector.prototype.onUsername = function (event) {}
 Connector.prototype.onVector2D = function (event) {}
 
 Connector.prototype.onVector3D = function (event) {}
+
+Connector.prototype.onSynchronizeServerTime = function (event) {};
+
+Connector.prototype.onServerTimeUpdate = function (event) {};
+
+Connector.prototype.onEnableDebugMode = function (event) {};
+
+Connector.prototype.onDisableDebugMode = function (event) {};
 
 // Methods
 
@@ -224,6 +244,30 @@ Connector.prototype.preventDoubleTapZoom = function (event) {
 Connector.prototype.preventScroll = function (event) {
   event.preventDefault();
 }
+
+Connector.prototype.startTimeSynchronizing = function () {
+  this.sendCommand({
+    message: "synchronizeTime",
+    clientTimestamp: new Date().getTime(),
+    playerID: this.getId(),
+  })
+  connector.timer = setTimeout(() => {
+    this.startTimeSynchronizing();
+  }, 5000);
+}
+
+Connector.prototype.stopTimeSynchronizing = function () {
+  clearTimeout(connector.timer);
+}
+
+Connector.prototype.sendLatency = function (latency) {
+  this.sendCommand({
+    message: "latency",
+    playerID: this.getId(),
+    latency: latency
+  })
+}
+
 
 // Here could be a database used for better authentication
 

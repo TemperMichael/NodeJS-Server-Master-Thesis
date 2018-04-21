@@ -1,4 +1,8 @@
-var connector = new Connector("91.250.101.23", "3000");
+var connector = new Connector("10.59.0.74", "3000");
+var currentTime;
+var roundTripTime;
+var latency = 0;
+var timeDelta;
 
 if (!connector.getId()) {
     connector.setId();
@@ -16,6 +20,36 @@ connector.onUsername = function (event) {
     const message = JSON.parse(event.data);
     if (connector.getId() + "Game" == message.playerID) {
         document.getElementById('usernameLabel').innerHTML = message.username;
+    }
+}
+
+connector.onEnableDebugMode = function (event) {
+    connector.startTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "block";
+}
+
+connector.onDisableDebugMode = function (event) {
+    connector.stopTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "none";
+}
+
+connector.onSynchronizeServerTime = function (event) {
+    const message = JSON.parse(event.data);
+    if (message.playerID == connector.getId()) {
+        currentTime = new Date().getTime();
+        roundTripTime = currentTime - parseFloat(message.clientTimestamp);
+        latency = roundTripTime / 2;
+        timeDelta = parseFloat(message.serverTimestamp) - currentTime + latency;
+    }
+}
+
+connector.onServerTimeUpdate = function (event) {
+    const message = JSON.parse(event.data);
+    var serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
+    document.getElementById('timesLabel').innerHTML = "Server Time: " + ("0" + serverClock.getUTCHours()).slice(-2) + ":" + ("0" + serverClock.getUTCMinutes()).slice(-2) + ":" + ("0" + serverClock.getUTCSeconds()).slice(-2) + ":" + serverClock.getUTCMilliseconds() + "<br/><br/>Latency: " + latency + " ms<br/><br/>Time delta: " + timeDelta + " ms";
+
+    if (serverClock.getSeconds() % 5 == 0) {
+        connector.sendLatency(latency);
     }
 }
 
