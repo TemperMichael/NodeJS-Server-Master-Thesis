@@ -45,7 +45,6 @@ connector.onSynchronizeServerTime = function (event) {
 connector.onServerTimeUpdate = function (event) {
     if (startDebugOnLoad) {
         enableDebugging();
-        startDebugOnLoad = false;
     }
     document.getElementById("timesLabel").style.display = "block";
     const message = JSON.parse(event.data);
@@ -113,6 +112,7 @@ function resetInputColor() {
 function enableDebugging() {
     connector.startTimeSynchronizing();
     document.getElementById("timesLabel").style.display = "block";
+    startDebugOnLoad = false;
 }
 
 function disableDebugging() {

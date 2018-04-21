@@ -26,6 +26,7 @@ connector.onUsername = function (event) {
 
 connector.onEnableDebugMode = function (event) {
     enableDebugging();
+
 }
 
 connector.onDisableDebugMode = function (event) {
@@ -45,7 +46,6 @@ connector.onSynchronizeServerTime = function (event) {
 connector.onServerTimeUpdate = function (event) {
     if (startDebugOnLoad) {
         enableDebugging();
-        startDebugOnLoad = false;
     }
     const message = JSON.parse(event.data);
     var serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
@@ -161,6 +161,7 @@ function resetInputColor() {
 function enableDebugging() {
     connector.startTimeSynchronizing();
     document.getElementById("timesLabel").style.display = "block";
+    startDebugOnLoad = false;
 }
 
 function disableDebugging() {
