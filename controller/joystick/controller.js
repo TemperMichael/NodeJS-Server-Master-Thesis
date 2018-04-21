@@ -3,6 +3,7 @@ var currentTime;
 var roundTripTime;
 var latency = 0;
 var timeDelta;
+var startDebugOnLoad = true;
 
 if (!connector.getId()) {
     connector.setId();
@@ -24,13 +25,11 @@ connector.onUsername = function (event) {
 }
 
 connector.onEnableDebugMode = function (event) {
-    connector.startTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "block";
+    enableDebugging();
 }
 
 connector.onDisableDebugMode = function (event) {
-    connector.stopTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "none";
+    disableDebugging();
 }
 
 connector.onSynchronizeServerTime = function (event) {
@@ -44,6 +43,9 @@ connector.onSynchronizeServerTime = function (event) {
 }
 
 connector.onServerTimeUpdate = function (event) {
+    if (startDebugOnLoad) {
+        enableDebugging();
+    }
     const message = JSON.parse(event.data);
     var serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
     document.getElementById('timesLabel').innerHTML = "Server Time: " + ("0" + serverClock.getUTCHours()).slice(-2) + ":" + ("0" + serverClock.getUTCMinutes()).slice(-2) + ":" + ("0" + serverClock.getUTCSeconds()).slice(-2) + ":" + serverClock.getUTCMilliseconds() + "<br/><br/>Latency: " + latency + " ms<br/><br/>Time delta: " + timeDelta + " ms";
@@ -153,4 +155,15 @@ function setInputName() {
 function resetInputColor() {
     document.getElementById("inputText").style.backgroundColor = "white";
     document.getElementById("inputText").style.color = "black";
+}
+
+function enableDebugging() {
+    connector.startTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "block";
+}
+
+function disableDebugging() {
+    connector.stopTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "none";
+    startDebugOnLoad = false;
 }

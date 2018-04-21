@@ -3,6 +3,7 @@ var currentTime;
 var roundTripTime;
 var latency = 0;
 var timeDelta;
+var startDebugOnLoad = true;
 
 if (!connector.getId()) {
     connector.setId();
@@ -24,16 +25,17 @@ connector.onUsername = function (event) {
 }
 
 connector.onEnableDebugMode = function (event) {
-    connector.startTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "block";
+    enableDebugging();
 }
 
 connector.onDisableDebugMode = function (event) {
-    connector.stopTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "none";
+    disableDebugging();
 }
 
 connector.onSynchronizeServerTime = function (event) {
+    if (startDebugOnLoad) {
+        enableDebugging();
+    }
     const message = JSON.parse(event.data);
     if (message.playerID == connector.getId()) {
         currentTime = new Date().getTime();
@@ -151,4 +153,15 @@ function setInputName() {
 function resetInputColor() {
     document.getElementById("inputText").style.backgroundColor = "white";
     document.getElementById("inputText").style.color = "black";
+}
+
+function enableDebugging() {
+    connector.startTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "block";
+}
+
+function disableDebugging() {
+    connector.stopTimeSynchronizing();
+    document.getElementById("timesLabel").style.display = "none";
+    startDebugOnLoad = false;
 }
