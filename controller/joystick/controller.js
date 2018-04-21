@@ -45,6 +45,7 @@ connector.onSynchronizeServerTime = function (event) {
 connector.onServerTimeUpdate = function (event) {
     if (startDebugOnLoad) {
         enableDebugging();
+        startDebugOnLoad = false;
     }
     const message = JSON.parse(event.data);
     var serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
@@ -165,5 +166,4 @@ function enableDebugging() {
 function disableDebugging() {
     connector.stopTimeSynchronizing();
     document.getElementById("timesLabel").style.display = "none";
-    startDebugOnLoad = false;
 }

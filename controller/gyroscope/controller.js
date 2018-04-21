@@ -35,6 +35,7 @@ connector.onDisableDebugMode = function (event) {
 connector.onSynchronizeServerTime = function (event) {
     if (startDebugOnLoad) {
         enableDebugging();
+        startDebugOnLoad = false;
     }
     const message = JSON.parse(event.data);
     if (message.playerID == connector.getId()) {
@@ -163,5 +164,4 @@ function enableDebugging() {
 function disableDebugging() {
     connector.stopTimeSynchronizing();
     document.getElementById("timesLabel").style.display = "none";
-    startDebugOnLoad = false;
 }

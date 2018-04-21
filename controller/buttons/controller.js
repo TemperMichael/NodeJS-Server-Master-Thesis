@@ -45,6 +45,7 @@ connector.onSynchronizeServerTime = function (event) {
 connector.onServerTimeUpdate = function (event) {
     if (startDebugOnLoad) {
         enableDebugging();
+        startDebugOnLoad = false;
     }
     document.getElementById("timesLabel").style.display = "block";
     const message = JSON.parse(event.data);
@@ -117,5 +118,4 @@ function enableDebugging() {
 function disableDebugging() {
     connector.stopTimeSynchronizing();
     document.getElementById("timesLabel").style.display = "none";
-    startDebugOnLoad = false;
 }
