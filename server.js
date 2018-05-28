@@ -8,6 +8,8 @@ var http = require("http"),
 
 const ws = require("ws");
 
+var desktopGameClient;
+
 const server = http.createServer(function (request, response) {
 
   var uri = url.parse(request.url).pathname,
@@ -62,38 +64,51 @@ const server = http.createServer(function (request, response) {
 }).setTimeout(0);
 
 server.listen(port, () => {
-  console.log('Server is running on port: %s', port);
+  console.log('Server is running on port: %s and ip address: %s', port, server.address().address);
 });
 
 server.on('error', function (exc) {
-  sys.log("Server Error: " + exc);
+  console.log("Server Error: " + exc);
 });
 
 const wsServer = new ws.Server({
   server
 });
 
-wsServer.on("connection", socket => {
-  socket.on("message", data => {
-    const message = JSON.parse(data);
-    console.log("----------------\nMessage:");
-    console.log(message);
-    console.log("\n");
-    wsServer.clients.forEach(client => {
-      if (client.readyState !== ws.OPEN) {
-        return;
-      }
-      client.send(JSON.stringify(message));
+wsServer.on("connection", (socket, req) => {
+  console.log(req.url);
+  if (req.url == "/?endpoint=desktopGame") {
+    desktopGameClient = socket;
+    socket.on("message", data => {
+      const message = JSON.parse(data);
+      console.log("----------------\nMessage to clients:");
+      console.log(message);
+      console.log("\n");
+      wsServer.clients.forEach(client => {
+        if (client.readyState !== ws.OPEN) {
+          return;
+        }
+        client.send(JSON.stringify(message));
+      });
     });
-  });
-
+  } else  {
+    socket.on("message", data => {
+      const message = JSON.parse(data);
+      console.log("----------------\nMessage to server:");
+      console.log(message);
+      console.log("\n");
+      if (desktopGameClient != null) {
+        desktopGameClient.send(JSON.stringify(message));
+      }
+    });
+  }
   socket.on('error', function (exc) {
     console.log("Socket Server Error: " + exc);
   });
 });
 
 wsServer.on('error', function (exc) {
-  sys.log("WS Server Error: " + exc);
+  console.log("WS Server Error: " + exc);
 });
 
 

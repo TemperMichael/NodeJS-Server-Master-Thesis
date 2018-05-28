@@ -1,9 +1,10 @@
-var connector = new Connector("10.59.0.74", "3000");
+var connector = new Connector("193.11.184.203", "3000");
 var currentTime;
 var roundTripTime;
 var latency = 0;
 var timeDelta;
 var startDebugOnLoad = true;
+var serverClock;
 
 if (!connector.getId()) {
     connector.setId();
@@ -48,7 +49,7 @@ connector.onServerTimeUpdate = function (event) {
         enableDebugging();
     }
     const message = JSON.parse(event.data);
-    var serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
+    serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
     document.getElementById('timesLabel').innerHTML = "Server Time: " + ("0" + serverClock.getUTCHours()).slice(-2) + ":" + ("0" + serverClock.getUTCMinutes()).slice(-2) + ":" + ("0" + serverClock.getUTCSeconds()).slice(-2) + ":" + serverClock.getUTCMilliseconds() + "<br/><br/>Latency: " + latency + " ms<br/><br/>Time delta: " + timeDelta + " ms";
 
     if (serverClock.getSeconds() % 5 == 0) {
@@ -130,7 +131,12 @@ document.addEventListener('touchend', function (event) {
 }, false);
 
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
-    connector.jump();
+    connector.sendCommand({
+        message: "jump",
+        deviceInformation: JSON.stringify(DeviceDetection.getDeviceInformation()),
+        serverClock: "test",
+        playerID: connector.getId()
+    })
 });
 
 document.getElementById("dashButton").addEventListener('touchstart', function (event) {
