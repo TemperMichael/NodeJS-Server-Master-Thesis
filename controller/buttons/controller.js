@@ -18,7 +18,7 @@ connector.onMessage = function (event) {
 
 connector.onUsername = function (event) {
     const message = JSON.parse(event.data);
-    if (connector.getId() + "Game" == message.playerID) {
+    if (connector.getId() == message.playerID) {
         document.getElementById('usernameLabel').innerHTML = message.username;
     }
 }

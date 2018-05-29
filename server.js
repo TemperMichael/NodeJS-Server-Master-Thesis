@@ -9,6 +9,7 @@ var http = require("http"),
 const ws = require("ws");
 
 var desktopGameClient;
+var mobileClients = {};
 
 const server = http.createServer(function (request, response) {
 
@@ -76,7 +77,6 @@ const wsServer = new ws.Server({
 });
 
 wsServer.on("connection", (socket, req) => {
-  console.log(req.url);
   if (req.url == "/?endpoint=desktopGame") {
     desktopGameClient = socket;
     socket.on("message", data => {
@@ -84,14 +84,14 @@ wsServer.on("connection", (socket, req) => {
       console.log("----------------\nMessage to clients:");
       console.log(message);
       console.log("\n");
-      wsServer.clients.forEach(client => {
-        if (client.readyState !== ws.OPEN || (client == desktopGameClient && !(message.message == "resetCenter" || message.message == "resetRandom"))) {
-          return;
-        }
-        client.send(JSON.stringify(message));
-      });
+      if (message.playerID != null && mobileClients[message.playerID] != null && mobileClients[message.playerID].readyState == ws.OPEN) {
+        mobileClients[message.playerID].send(JSON.stringify(message));
+      }
     });
   } else  {
+    if (req.url.split('=')[1] != null) {
+      mobileClients[req.url.split('=')[1]] = socket;
+    }
     socket.on("message", data => {
       const message = JSON.parse(data);
       console.log("----------------\nMessage to server:");

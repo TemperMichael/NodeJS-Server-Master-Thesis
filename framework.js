@@ -6,7 +6,7 @@ var Connector = function (ipAdress, port) {
   startWebsocket(this);
 
   function startWebsocket(connector) {
-    ws = new WebSocket("ws://" + _ipAdress + ":" + _port);
+    ws = new WebSocket("ws://" + _ipAdress + ":" + _port + "/?id=" + connector.getId());
 
     ws.onopen = (event) => {
       connector.onOpen(event);
