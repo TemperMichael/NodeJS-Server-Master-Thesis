@@ -85,7 +85,7 @@ wsServer.on("connection", (socket, req) => {
       console.log(message);
       console.log("\n");
       wsServer.clients.forEach(client => {
-        if (client.readyState !== ws.OPEN) {
+        if (client.readyState !== ws.OPEN || (client == desktopGameClient && !(message.message == "resetCenter" || message.message == "resetRandom"))) {
           return;
         }
         client.send(JSON.stringify(message));
@@ -97,7 +97,7 @@ wsServer.on("connection", (socket, req) => {
       console.log("----------------\nMessage to server:");
       console.log(message);
       console.log("\n");
-      if (desktopGameClient != null) {
+      if (desktopGameClient != null && desktopGameClient.readyState == ws.OPEN) {
         desktopGameClient.send(JSON.stringify(message));
       }
     });

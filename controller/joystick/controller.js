@@ -3,8 +3,6 @@ var currentTime;
 var roundTripTime;
 var latency = 0;
 var timeDelta;
-var startDebugOnLoad = true;
-var serverClock;
 
 if (!connector.getId()) {
     connector.setId();
@@ -25,35 +23,23 @@ connector.onUsername = function (event) {
     }
 }
 
-connector.onEnableDebugMode = function (event) {
-    enableDebugging();
-
-}
-
-connector.onDisableDebugMode = function (event) {
-    disableDebugging();
-}
-
-connector.onSynchronizeServerTime = function (event) {
+connector.onCalculateLatency = function (event) {
     const message = JSON.parse(event.data);
     if (message.playerID == connector.getId()) {
         currentTime = new Date().getTime();
-        roundTripTime = currentTime - parseFloat(message.clientTimestamp);
+        roundTripTime = currentTime - parseFloat(message.clientTimestampSent);
         latency = roundTripTime / 2;
-        timeDelta = parseFloat(message.serverTimestamp) - currentTime + latency;
-    }
-}
-
-connector.onServerTimeUpdate = function (event) {
-    if (startDebugOnLoad) {
-        enableDebugging();
-    }
-    const message = JSON.parse(event.data);
-    serverClock = new Date(parseFloat(message.serverTimestamp) + timeDelta);
-    document.getElementById('timesLabel').innerHTML = "Server Time: " + ("0" + serverClock.getUTCHours()).slice(-2) + ":" + ("0" + serverClock.getUTCMinutes()).slice(-2) + ":" + ("0" + serverClock.getUTCSeconds()).slice(-2) + ":" + serverClock.getUTCMilliseconds() + "<br/><br/>Latency: " + latency + " ms<br/><br/>Time delta: " + timeDelta + " ms";
-
-    if (serverClock.getSeconds() % 5 == 0) {
-        connector.sendLatency(latency);
+        timeDelta = (parseFloat(message.serverTimestamp) - currentTime) + latency;
+        connector.sendCommand({
+            message: "latencyJump",
+            deviceInformation: JSON.stringify(DeviceDetection.getDeviceInformation()),
+            latency: "" + latency,
+            syncServerTime: "" + (parseFloat(message.serverTimestamp) + timeDelta),
+            clientTimestampSent: message.clientTimestampSent,
+            serverTimestamp: message.serverTimestamp,
+            clientTimestampReceived: "" + currentTime,
+            playerID: connector.getId()
+        })
     }
 }
 
@@ -133,9 +119,8 @@ document.addEventListener('touchend', function (event) {
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
     connector.sendCommand({
         message: "jump",
-        deviceInformation: JSON.stringify(DeviceDetection.getDeviceInformation()),
-        serverClock: "test",
-        playerID: connector.getId()
+        clientTimestampSent: new Date().getTime(),
+        playerID: connector.getId(),
     })
 });
 
@@ -162,15 +147,4 @@ function setInputName() {
 function resetInputColor() {
     document.getElementById("inputText").style.backgroundColor = "white";
     document.getElementById("inputText").style.color = "black";
-}
-
-function enableDebugging() {
-    connector.startTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "block";
-    startDebugOnLoad = false;
-}
-
-function disableDebugging() {
-    connector.stopTimeSynchronizing();
-    document.getElementById("timesLabel").style.display = "none";
 }
