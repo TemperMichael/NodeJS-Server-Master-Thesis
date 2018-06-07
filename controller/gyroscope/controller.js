@@ -1,4 +1,4 @@
-var connector = new Connector("192.168.1.212", "3000");
+var connector = new Connector("192.168.1.126", "3000");
 var currentTime;
 var roundTripTime;
 var latency = 0;
@@ -104,11 +104,18 @@ function setupGyroscope() {
 }
 
 document.addEventListener('touchmove', function (event) {
-    connector.preventScroll(event);
-}, false);
+        event.preventDefault();
+    }, {
+        passive: false
+    },
+    false);
 
 document.addEventListener('touchend', function (event) {
-    connector.preventDoubleTapZoom(event);
+    if (event.target.nodeName != "INPUT") {
+        event.preventDefault();
+    }
+}, {
+    passive: false
 }, false);
 
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {

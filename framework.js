@@ -245,18 +245,6 @@ Connector.prototype.sendVector3D = function (x, y, z) {
   })
 }
 
-// Others
-
-Connector.prototype.preventDoubleTapZoom = function (event) {
-  if (event.target.nodeName != "INPUT") {
-    event.preventDefault();
-  }
-}
-
-Connector.prototype.preventScroll = function (event) {
-  event.preventDefault();
-}
-
 // Here could be a database used for better authentication
 
 Connector.prototype.getId = function () {

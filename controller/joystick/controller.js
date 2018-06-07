@@ -20,6 +20,8 @@ connector.onUsername = function (event) {
     }
 }
 
+
+
 connector.onCalculateLatency = function (event) {
     const message = JSON.parse(event.data);
     if (message.playerID == connector.getId()) {
@@ -106,13 +108,19 @@ function setupJoystick() {
 }
 
 document.addEventListener('touchmove', function (event) {
-    connector.preventScroll(event);
-}, false);
+        event.preventDefault();
+    }, {
+        passive: false
+    },
+    false);
 
 document.addEventListener('touchend', function (event) {
-    connector.preventDoubleTapZoom(event);
+    if (event.target.nodeName != "INPUT") {
+        event.preventDefault();
+    }
+}, {
+    passive: false
 }, false);
-
 document.getElementById("jumpButton").addEventListener('touchstart', function (event) {
     connector.sendCommand({
         message: "jump",
