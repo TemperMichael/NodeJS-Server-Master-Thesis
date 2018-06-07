@@ -64,7 +64,7 @@ const server = http.createServer(function (request, response) {
 
 }).setTimeout(0);
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
   console.log('Server is running on port: %s and ip address: %s', port, server.address().address);
 });
 

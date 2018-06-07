@@ -1,12 +1,10 @@
-var connector = new Connector("193.11.184.203", "3000");
+var connector = new Connector("192.168.1.212", "3000");
 var currentTime;
 var roundTripTime;
 var latency = 0;
 var timeDelta;
 
-if (!connector.getId()) {
-    connector.setId();
-}
+
 
 connector.onOpen = function (event) {
     connector.setUsername("getInitialUserInfo");
