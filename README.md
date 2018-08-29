@@ -24,7 +24,7 @@ The project is based on WebSockets and Node.js, so both of them have to be insta
 
 [Node.js Installer](https://nodejs.org/en/#download)
 
-Then the WebSocket library has to be installed in the root of the project with the following command in the terminal:
+Then the WebSocket library has to be installed in the root folder of the project with the following command in the terminal:
 
 ```
 npm install --save ws
@@ -34,7 +34,7 @@ Additional documentation about the WebSocket library can be found here:
 
 [WebSocket library documentation](https://www.npmjs.com/package/ws)
 
-After this, there are several points which have to be considered:
+After this step, there are several aspects which have to be considered:
 * The IP address and the port of the websocket server have to be entered at the files of all endpoints.
   * The default port is 3000 and can be changed in the following file:
     ```
