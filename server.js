@@ -6,12 +6,19 @@ var http = require("http"),
   fs = require("fs"),
   port = 3000;
 
+var httpProxy = require('http-proxy');
+var proxy = httpProxy.createProxyServer({});
+
 const ws = require("ws");
 
 var desktopGameClient;
 var mobileClients = {};
 
+
 const server = http.createServer(function (request, response) {
+
+
+  proxy.web(request, response, { target: 'http://www.google.com' });
 
   var uri = url.parse(request.url).pathname,
     filename = path.join(process.cwd(), uri);

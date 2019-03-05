@@ -1,6 +1,4 @@
-var Connector = function (ipAdress, port) {
-  var _ipAdress = ipAdress;
-  var _port = port;
+var Connector = function () {
   var ws;
 
   function startWebsocket(connector) {
@@ -30,7 +28,7 @@ var Connector = function (ipAdress, port) {
       setCookie("playerID", Math.floor(Math.random() * 1000000000), 3);
     }
 
-    ws = new WebSocket("ws://" + _ipAdress + ":" + _port + "/?id=" + getCookie("playerID"));
+    ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/?id=" + getCookie("playerID"));
 
     ws.onopen = (event) => {
       connector.onOpen(event);

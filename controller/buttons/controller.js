@@ -1,4 +1,4 @@
-var connector = new Connector("192.168.1.126", "3000");
+var connector = new Connector();
 var currentTime;
 var roundTripTime;
 var latency = 0;
